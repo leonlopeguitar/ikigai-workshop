@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ikigai para Músicos with AI — Tus prompts</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500&display=swap');
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #EDE7DA;
+    color: #211F1C;
+    font-family: 'Inter', sans-serif;
+    padding: 3rem 1.5rem 5rem;
+  }
+  .wrap { max-width: 620px; margin: 0 auto; position: relative; }
+
+  .enso {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 76px;
+    height: 76px;
+    opacity: 0.85;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 28px;
+    margin: 0 0 6px;
+    max-width: 420px;
+    line-height: 1.15;
+  }
+  .subtitle {
+    color: #5C6B66;
+    font-size: 13px;
+    margin: 0 0 2.25rem;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 0.5px solid rgba(33,31,28,0.25);
+    margin-bottom: 2rem;
+    overflow-x: auto;
+  }
+  .tab {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #5C6B66;
+    background: none;
+    border: none;
+    padding: 10px 14px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -0.5px;
+  }
+  .tab.active {
+    color: #211F1C;
+    border-bottom: 2px solid #A83E2C;
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 19px;
+    margin: 0 0 4px;
+  }
+  .panel-note {
+    font-size: 12.5px;
+    color: #5C6B66;
+    margin: 0 0 1.5rem;
+    line-height: 1.5;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    color: #5C6B66;
+    margin: 1rem 0 6px;
+  }
+  label:first-of-type { margin-top: 0; }
+  label .hint { color: #A83E2C; }
+
+  textarea, input[type="text"], select {
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #211F1C;
+    background: #F7F4EC;
+    border: 0.5px solid rgba(33,31,28,0.3);
+    border-radius: 6px;
+    padding: 10px 12px;
+    resize: vertical;
+  }
+  textarea { min-height: 64px; line-height: 1.6; }
+  textarea:focus, input:focus, select:focus {
+    outline: none;
+    border-color: #A83E2C;
+  }
+
+  .prompt-box {
+    background: #F7F4EC;
+    border: 0.5px solid rgba(33,31,28,0.25);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.65;
+    color: #211F1C;
+    white-space: pre-wrap;
+    margin-top: 1.25rem;
+  }
+  .prompt-box b { font-weight: 500; }
+
+  button.copybtn {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #211F1C;
+    background: transparent;
+    border: 0.5px solid #211F1C;
+    border-radius: 6px;
+    padding: 9px 16px;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
+  button.copybtn:hover { background: rgba(33,31,28,0.06); }
+  button.copybtn.copied { border-color: #5C6B66; color: #5C6B66; }
+  button.copybtn.err { border-color: #A83E2C; color: #A83E2C; }
+
+  .helper {
+    font-size: 12px;
+    color: #5C6B66;
+    margin-top: 8px;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    min-width: 6px;
+    border-radius: 50%;
+    background: #A83E2C;
+    margin-top: 5px;
+  }
+
+  footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 0.5px solid rgba(33,31,28,0.25);
+    text-align: center;
+  }
+  footer button.copybtn {
+    border-color: #5C6B66;
+    color: #5C6B66;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <svg class="enso" viewBox="0 0 180 180">
+    <path d="M90,20 A75,72 15 1 1 89,20" stroke="#211F1C" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </svg>
+
+  <h1>Ikigai para músicos with AI</h1>
+  <p class="subtitle">Llena cada pestaña en orden y copia el prompt cuando el instructor te lo indique.</p>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="p1">Prompt 1</button>
+    <button class="tab" data-tab="perfil">Perfil</button>
+    <button class="tab" data-tab="p2">Prompt 2</button>
+    <button class="tab" data-tab="p3">Prompt 3</button>
+  </div>
+
+  <!-- PROMPT 1 -->
+  <div class="panel active" id="panel-p1">
+    <h2>Prompt 1 — convertir a párrafos</h2>
+    <p class="panel-note">No hay límite de respuestas por pregunta — entre más específico y descriptivo, mejor sale el plan al final. Escribe una idea por línea, con Enter; el guion se agrega solo.</p>
+
+    <label for="love">Lo que amo</label>
+    <textarea id="love" placeholder="Componer música para videojuegos&#10;Cocinar cuando estoy solo&#10;Tocar piano jazz"></textarea>
+
+    <label for="good">En lo que soy bueno</label>
+    <textarea id="good" placeholder="Dictando clases a niños&#10;Diseñando páginas web&#10;Dirigiendo ensambles"></textarea>
+
+    <label for="paid">Por lo que me pueden pagar</label>
+    <textarea id="paid" placeholder="Clases de piano en una academia&#10;Arreglos para orquesta infantil&#10;Diseño web para músicos"></textarea>
+
+    <label for="world">Lo que el mundo necesita de mí</label>
+    <textarea id="world" placeholder="Mi forma de estructurar clases&#10;Música colombiana que cuente historias"></textarea>
+
+    <div class="prompt-box" id="prompt1box">Llena tus respuestas arriba para generar este prompt.</div>
+    <button class="copybtn" id="copy1">Copiar Prompt 1</button>
+    <p class="helper"><span class="dot"></span>Espera a que Claude te devuelva tus párrafos y corrobora que quedaron bien antes de seguir.</p>
+  </div>
+
+  <!-- PERFIL -->
+  <div class="panel" id="panel-perfil">
+    <h2>Perfil — instrucciones para Claude</h2>
+    <p class="panel-note">Esto va en Claude → Ajustes → Perfil → Instrucciones personalizadas. Se hace una sola vez, en una conversación nueva o antes de seguir con Prompt 2.</p>
+
+    <label for="enfoque">Mi enfoque (instrumento / género / rol)</label>
+    <input type="text" id="enfoque" placeholder="ej. guitarrista eléctrico enfocado en jazz, también compongo para big band">
+
+    <label for="etapa">Etapa de carrera</label>
+    <select id="etapa">
+      <option value="">Selecciona una opción</option>
+      <option>estudiante</option>
+      <option>aficionado</option>
+      <option>semi-profesional</option>
+      <option>profesional estancado</option>
+      <option>agotado</option>
+      <option>en transición</option>
+    </select>
+
+    <label for="objetivos">Mis objetivos principales, ordenados por prioridad (el #1 es el más importante)</label>
+    <textarea id="objetivos" placeholder="Ingresos estables&#10;Carrera docente&#10;Satisfacción creativa"></textarea>
+
+    <div class="prompt-box" id="perfilbox">Llena los campos arriba para generar tu perfil.</div>
+    <button class="copybtn" id="copyperfil">Copiar perfil</button>
+  </div>
+
+  <!-- PROMPT 2 -->
+  <div class="panel" id="panel-p2">
+    <h2>Prompt 2 — descubrir tu Ikigai</h2>
+    <p class="panel-note">Este no necesita relleno. Pégalo tal cual, en la misma conversación de Claude donde pegaste Prompt 1.</p>
+    <div class="prompt-box">Con base en eso, ¿cuál es mi Ikigai? ¿Y cuáles son 3–5 caminos de carrera musical realistas que se alineen con él? Sé específico según mis respuestas, no genérico.</div>
+    <button class="copybtn" id="copy2">Copiar Prompt 2</button>
+    <p class="helper"><span class="dot"></span>Cuando el instructor lo pida, comparte tu Ikigai en voz alta con el grupo.</p>
+  </div>
+
+  <!-- PROMPT 3 -->
+  <div class="panel" id="panel-p3">
+    <h2>Prompt 3 — tu plan de 60 días</h2>
+    <p class="panel-note"><span class="hint">Importante:</span> no copies la respuesta completa de Claude. Pega solo lo esencial — si pegas todo el razonamiento, el plan se construye sobre las justificaciones de Claude en vez de sobre tus propias respuestas.</p>
+
+    <label for="ikigai">Tu Ikigai — solo el párrafo que lo describe, sin los caminos de carrera que vienen después</label>
+    <textarea id="ikigai" placeholder="ej. Tu Ikigai está en la intersección entre componer música con intención narrativa y crear estructuras que ayuden a otros músicos a organizarse..."></textarea>
+
+    <label for="path">El camino que quiero explorar — solo el título + una frase, no el párrafo completo</label>
+    <input type="text" id="path" placeholder="ej. Compositora para contenido audiovisual de nicho — mi camino más directo, ya lo hago informalmente">
+    <p class="helper"><span class="dot"></span>Ejemplo de qué NO pegar: el párrafo largo que explica por qué ese camino te conviene — esa parte es el razonamiento de Claude, no un hecho tuyo.</p>
+
+    <label for="hours">Horas por semana disponibles</label>
+    <input type="text" id="hours" placeholder="ej. 6 horas por semana">
+
+    <div class="prompt-box" id="prompt3box">Llena los campos arriba para generar este prompt.</div>
+    <button class="copybtn" id="copy3">Copiar Prompt 3</button>
+  </div>
+
+  <footer>
+    <button class="copybtn" id="download">Descargar mis respuestas (archivo de texto)</button>
+    <p class="helper" style="justify-content:center;">Se guarda en tu computador — no requiere ninguna cuenta de Google.</p>
+  </footer>
+
+</div>
+
+<script>
+// tab switching
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+function val(id) { return document.getElementById(id).value.trim(); }
+
+// convierte cada línea escrita en una viñeta "- línea", sin importar si el usuario ya puso guion
+function formatBullets(text) {
+  if (!text) return '';
+  return text.split('\n')
+    .map(line => line.trim())
+    .filter(line => line.length > 0)
+    .map(line => {
+      const stripped = line.replace(/^[-•]\s*/, '');
+      return '- ' + stripped;
+    })
+    .join('\n');
+}
+
+function buildPerfil() {
+  const enfoque = val('enfoque'), etapa = val('etapa'), objetivos = val('objetivos');
+  if (!enfoque && !etapa && !objetivos) return null;
+  return `# PERFIL DE MÚSICO
+## QUIÉN SOY
+Soy músico. Mi enfoque: ${enfoque || '[instrumento/género/rol]'}.
+Etapa de carrera: ${etapa || '[etapa]'}.
+## QUÉ QUIERO
+Mis objetivos principales ahora mismo, ordenados por prioridad (el #1 es el más importante):
+${formatBullets(objetivos) || '[objetivos]'}
+## CÓMO AYUDARME
+- Nada de consejos genéricos ("sigue tu pasión", "cree en ti mismo"). Basa todo en caminos reales de la industria musical: interpretación, docencia, composición, producción, trabajo de sesión, creación de contenido, licencias de sincronización, musicoterapia, administración artística.
+- Si mis respuestas son vagas, haz UNA sola pregunta aclaratoria antes de responder.
+- Prioriza pasos realistas y secuenciados por encima del lenguaje motivacional.
+- No seas condescendiente. Dame respuestas neutrales y directas — sin tanta explicación ni palabras de consuelo.
+- No estés de acuerdo ni valides todo lo que propongo. Si una idea tiene un punto débil, dilo — incluso si parezco seguro de ella.
+- Si estoy equivocado en algo, dilo directamente primero — no lo envuelvas en razonamientos o justificaciones. Dilo, y explica solo si te lo pido.`;
+}
+
+function buildPrompt1() {
+  const love = val('love'), good = val('good'), paid = val('paid'), world = val('world');
+  if (!love && !good && !paid && !world) return null;
+  return `Soy músico y quiero encontrar mi Ikigai. Antes de continuar, me gustaría que me ayudes a convertir mis respuestas en párrafos claros — las escribí en viñetas. Aquí están mis respuestas a las cuatro preguntas del Ikigai:
+
+Lo que amo:
+${formatBullets(love) || '[sin respuesta]'}
+
+En lo que soy bueno:
+${formatBullets(good) || '[sin respuesta]'}
+
+Por lo que me pueden pagar:
+${formatBullets(paid) || '[sin respuesta]'}
+
+Lo que el mundo necesita de mí:
+${formatBullets(world) || '[sin respuesta]'}
+
+Por favor, reescribe cada una como un párrafo breve, manteniendo mis ideas y mi voz intactas — no agregues nada que yo no haya dicho.`;
+}
+
+function buildPrompt3() {
+  const ikigai = val('ikigai'), path = val('path'), hours = val('hours');
+  if (!ikigai && !path && !hours) return null;
+  return `Mi Ikigai es ${ikigai || '[pega la respuesta de Claude del Prompt 2]'}. El camino de carrera que quiero explorar es ${path || '[camino elegido]'}. Crea un plan de acción realista de 60 días para mí. Divídelo en Semana 1–2, Semana 3–4, Semana 5–6, Semana 7–8. Incluye acciones específicas, no metas vagas. Actualmente soy estudiante de música con ${hours || '[X horas por semana]'} disponibles.`;
+}
+
+function refresh() {
+  document.getElementById('prompt1box').textContent = buildPrompt1() || 'Llena tus respuestas arriba para generar este prompt.';
+  document.getElementById('perfilbox').textContent = buildPerfil() || 'Llena los campos arriba para generar tu perfil.';
+  document.getElementById('prompt3box').textContent = buildPrompt3() || 'Llena los campos arriba para generar este prompt.';
+}
+
+['enfoque','etapa','objetivos','love','good','paid','world','ikigai','path','hours'].forEach(id => {
+  document.getElementById(id).addEventListener('input', refresh);
+  document.getElementById(id).addEventListener('change', refresh);
+});
+refresh();
+
+// copia con respaldo: Clipboard API primero, si falla o no existe (ej. abierto como file://) usa un textarea oculto + execCommand
+function copyText(text, btn) {
+  if (!text) return;
+
+  function legacyCopy() {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    ta.style.top = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  function showState(success) {
+    const original = btn.dataset.label || btn.textContent;
+    btn.dataset.label = original;
+    btn.textContent = success ? 'Copiado ✓' : 'No se pudo copiar — selecciona el texto manualmente';
+    btn.classList.toggle('copied', success);
+    btn.classList.toggle('err', !success);
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.classList.remove('copied', 'err');
+    }, success ? 1800 : 3000);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => showState(true)).catch(() => showState(legacyCopy()));
+  } else {
+    showState(legacyCopy());
+  }
+}
+
+document.getElementById('copy1').addEventListener('click', function() { copyText(buildPrompt1(), this); });
+document.getElementById('copyperfil').addEventListener('click', function() { copyText(buildPerfil(), this); });
+document.getElementById('copy2').addEventListener('click', function() {
+  copyText('Con base en eso, ¿cuál es mi Ikigai? ¿Y cuáles son 3–5 caminos de carrera musical realistas que se alineen con él? Sé específico según mis respuestas, no genérico.', this);
+});
+document.getElementById('copy3').addEventListener('click', function() { copyText(buildPrompt3(), this); });
+
+document.getElementById('download').addEventListener('click', function() {
+  const content = `IKIGAI PARA MÚSICOS WITH AI — Mis respuestas
+
+Lo que amo:
+${formatBullets(val('love'))}
+
+En lo que soy bueno:
+${formatBullets(val('good'))}
+
+Por lo que me pueden pagar:
+${formatBullets(val('paid'))}
+
+Lo que el mundo necesita de mí:
+${formatBullets(val('world'))}
+
+PERFIL
+${buildPerfil() || '(sin completar)'}
+
+Mi Ikigai (respuesta de Claude):
+${val('ikigai')}
+
+Camino elegido: ${val('path')}
+Horas disponibles por semana: ${val('hours')}
+`;
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'mi-ikigai.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>
