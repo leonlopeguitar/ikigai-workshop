@@ -364,9 +364,9 @@ Por favor, reescribe cada una como un párrafo breve, manteniendo mis ideas y mi
 }
 
 function buildPrompt3() {
-  const ikigai = val('ikigai'), path = val('path'), hours = val('hours');
+  const ikigai = val('ikigai'), path = val('path'), hours = val('hours'), etapa = val('etapa');
   if (!ikigai && !path && !hours) return null;
-  return `Mi Ikigai es ${ikigai || '[pega la respuesta de Claude del Prompt 2]'}. El camino de carrera que quiero explorar es ${path || '[camino elegido]'}. Crea un plan de acción realista de 60 días para mí. Divídelo en Semana 1–2, Semana 3–4, Semana 5–6, Semana 7–8. Incluye acciones específicas, no metas vagas. Actualmente soy estudiante de música con ${hours || '[X horas por semana]'} disponibles.`;
+  return `Mi Ikigai es ${ikigai || '[pega la respuesta de Claude del Prompt 2]'}. El camino de carrera que quiero explorar es ${path || '[camino elegido]'}. Crea un plan de acción realista de 60 días para mí. Divídelo en Semana 1–2, Semana 3–4, Semana 5–6, Semana 7–8. Incluye acciones específicas, no metas vagas. Mi etapa actual como músico es: ${etapa || '[completa la pestaña Perfil]'}. Tengo ${hours || '[X horas por semana]'} disponibles.`;
 }
 
 function refresh() {
