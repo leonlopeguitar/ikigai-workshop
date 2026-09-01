@@ -86,6 +86,28 @@
   .panel { display: none; }
   .panel.active { display: block; }
 
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .open-claude-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: #5C6B66;
+    background: transparent;
+    border: 0.5px solid #5C6B66;
+    border-radius: 999px;
+    padding: 5px 11px;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .open-claude-btn:hover { background: rgba(92,107,102,0.08); }
+
   h2 {
     font-family: 'Fraunces', serif;
     font-weight: 500;
@@ -216,7 +238,10 @@
 
   <!-- PROMPT 1 -->
   <div class="panel active" id="panel-p1">
-    <h2>Prompt 1 — convertir a párrafos</h2>
+    <div class="panel-header">
+      <h2>Prompt 1 — convertir a párrafos</h2>
+      <a href="https://claude.ai" target="ikigai_claude_tab" class="open-claude-btn">Abrir Claude ↗</a>
+    </div>
     <p class="panel-note">No hay límite de respuestas por pregunta — entre más específico y descriptivo, mejor sale el plan al final. Escribe una idea por línea, con Enter; el guion se agrega solo.</p>
 
     <label for="love">Lo que amo</label>
@@ -238,7 +263,10 @@
 
   <!-- PERFIL -->
   <div class="panel" id="panel-perfil">
-    <h2>Perfil — instrucciones para Claude</h2>
+    <div class="panel-header">
+      <h2>Perfil — instrucciones para Claude</h2>
+      <a href="https://claude.ai" target="ikigai_claude_tab" class="open-claude-btn">Abrir Claude ↗</a>
+    </div>
     <p class="panel-note">Esto va en Claude → Ajustes → Perfil → Instrucciones personalizadas. Se hace una sola vez, en una conversación nueva o antes de seguir con Prompt 2.</p>
 
     <label for="enfoque">Mi enfoque (instrumento / género / rol)</label>
@@ -265,7 +293,10 @@
 
   <!-- PROMPT 2 -->
   <div class="panel" id="panel-p2">
-    <h2>Prompt 2 — descubrir tu Ikigai</h2>
+    <div class="panel-header">
+      <h2>Prompt 2 — descubrir tu Ikigai</h2>
+      <a href="https://claude.ai" target="ikigai_claude_tab" class="open-claude-btn">Abrir Claude ↗</a>
+    </div>
     <p class="panel-note">Este no necesita relleno. Pégalo tal cual, en la misma conversación de Claude donde pegaste Prompt 1.</p>
     <div class="prompt-box">Con base en eso, ¿cuál es mi Ikigai? ¿Y cuáles son 3–5 caminos de carrera musical realistas que se alineen con él? Sé específico según mis respuestas, no genérico.</div>
     <button class="copybtn" id="copy2">Copiar Prompt 2</button>
@@ -274,7 +305,10 @@
 
   <!-- PROMPT 3 -->
   <div class="panel" id="panel-p3">
-    <h2>Prompt 3 — tu plan de 60 días</h2>
+    <div class="panel-header">
+      <h2>Prompt 3 — tu plan de 60 días</h2>
+      <a href="https://claude.ai" target="ikigai_claude_tab" class="open-claude-btn">Abrir Claude ↗</a>
+    </div>
     <p class="panel-note"><span class="hint">Importante:</span> no copies la respuesta completa de Claude. Pega solo lo esencial — si pegas todo el razonamiento, el plan se construye sobre las justificaciones de Claude en vez de sobre tus propias respuestas.</p>
 
     <label for="ikigai">Tu Ikigai — solo el párrafo que lo describe, sin los caminos de carrera que vienen después</label>
@@ -294,6 +328,8 @@
   <footer>
     <button class="copybtn" id="download">Descargar mis respuestas (archivo de texto)</button>
     <p class="helper" style="justify-content:center;">Se guarda en tu computador — no requiere ninguna cuenta de Google.</p>
+    <p class="helper" style="justify-content:center; margin-top: 4px;">Tus respuestas se guardan automáticamente en este navegador — si la página se recarga, no las pierdes.</p>
+    <button class="copybtn" id="clearStorage" style="margin-top: 10px; font-size: 11px; padding: 6px 12px; border-color: rgba(92,107,102,0.5); color: #5C6B66;">Borrar mis respuestas guardadas</button>
   </footer>
 
 </div>
@@ -369,13 +405,35 @@ function buildPrompt3() {
   return `Mi Ikigai es ${ikigai || '[pega la respuesta de Claude del Prompt 2]'}. El camino de carrera que quiero explorar es ${path || '[camino elegido]'}. Crea un plan de acción realista de 60 días para mí. Divídelo en Semana 1–2, Semana 3–4, Semana 5–6, Semana 7–8. Incluye acciones específicas, no metas vagas. Mi etapa actual como músico es: ${etapa || '[completa la pestaña Perfil]'}. Tengo ${hours || '[X horas por semana]'} disponibles.`;
 }
 
+const FIELD_IDS = ['enfoque','etapa','objetivos','love','good','paid','world','ikigai','path','hours'];
+const STORAGE_KEY = 'ikigai-tool-respuestas';
+
+function saveToStorage() {
+  const data = {};
+  FIELD_IDS.forEach(id => { data[id] = document.getElementById(id).value; });
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) { /* localStorage no disponible, se ignora */ }
+}
+
+function restoreFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    FIELD_IDS.forEach(id => {
+      if (data[id]) document.getElementById(id).value = data[id];
+    });
+  } catch (e) { /* datos corruptos o localStorage no disponible, se ignora */ }
+}
+
 function refresh() {
   document.getElementById('prompt1box').textContent = buildPrompt1() || 'Llena tus respuestas arriba para generar este prompt.';
   document.getElementById('perfilbox').textContent = buildPerfil() || 'Llena los campos arriba para generar tu perfil.';
   document.getElementById('prompt3box').textContent = buildPrompt3() || 'Llena los campos arriba para generar este prompt.';
+  saveToStorage();
 }
 
-['enfoque','etapa','objetivos','love','good','paid','world','ikigai','path','hours'].forEach(id => {
+restoreFromStorage();
+FIELD_IDS.forEach(id => {
   document.getElementById(id).addEventListener('input', refresh);
   document.getElementById(id).addEventListener('change', refresh);
 });
@@ -457,6 +515,13 @@ Horas disponibles por semana: ${val('hours')}
   a.download = 'mi-ikigai.txt';
   a.click();
   URL.revokeObjectURL(url);
+});
+
+document.getElementById('clearStorage').addEventListener('click', function() {
+  if (!confirm('¿Borrar todas tus respuestas guardadas en este navegador? Esto no se puede deshacer.')) return;
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  FIELD_IDS.forEach(id => { document.getElementById(id).value = ''; });
+  refresh();
 });
 </script>
 </body>
